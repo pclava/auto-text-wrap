@@ -1,11 +1,11 @@
 {
 	"id": "auto-text-wrap",
 	"name": "AutoTextWrap",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "Automatically wraps text as the user types",
 	"author": "Paul Clavaud",
-	"authorUrl": "https://obsidian.md",
+	"authorUrl": "https://github.com/pclava",
 	"fundingUrl": "https://obsidian.md/pricing",
 	"isDesktopOnly": false
 }
