@@ -28,7 +28,7 @@ export class SettingTab extends PluginSettingTab {
             .setDesc('Select how many characters should be allowed per line before wrapping')
             .addText((text) =>        // text input
                 text
-                    .setPlaceholder('60')
+                    .setPlaceholder('enter a number')
                     .setValue(this.plugin.settings.textWidth.toString())
                     .onChange(async (value) => {
                         this.plugin.settings.textWidth = parseInt(value);

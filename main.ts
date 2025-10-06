@@ -30,8 +30,13 @@ export default class AutoTextWrapPlugin extends Plugin {
 
 		this.addSettingTab(new SettingTab(this.app, this));
 
-		// // Get the current window (markdownview if in editor, otherwise null)
-		const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+		let view = this.app.workspace.getActiveViewOfType(MarkdownView);
+		
+		// doing this upon leaf change ensures that Obsidian always sets view correctly
+		this.registerEvent(this.app.workspace.on('active-leaf-change', leaf => {
+			// Get the current window (markdownview if in editor, otherwise null)
+			view = this.app.workspace.getActiveViewOfType(MarkdownView);
+		}));
 		
 		// Creates an extension to CodeRunner's EditorView that adds the code below to the updateListener,
 		// triggering every time the EditorView is updated.
