@@ -46,6 +46,7 @@ export default class AutoTextWrapPlugin extends Plugin {
 					
 					// if cursor at 20, line is less than 20ch and text was added
 					if (cursor.ch == this.settings.textWidth && view.editor.getLine(line).length <= this.settings.textWidth && diff >= 1) {
+						console.log("wrapping");
 						view.editor.setCursor(line, 0); // move the cursor back a bit
 						view.editor.replaceRange('\n', cursor); // add a new line
 						view.editor.setCursor(line+1, 0); // move the cursor to the new line
