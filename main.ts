@@ -48,36 +48,28 @@ export default class AutoTextWrapPlugin extends Plugin {
 		// Creates an extension to CodeRunner's EditorView that adds the code below to the updateListener,
 		// triggering every time the EditorView is updated.
 		const changeInspector: Extension = EditorView.updateListener.of((update: ViewUpdate) => {
-			if (update.docChanged) { // if the document was changed
-				const diff = update.state.doc.length - update.startState.doc.length // if negative, text was deleted
+			if (update.docChanged && view) { // if the document was changed and we're in the right workspace
+				const diff = update.state.doc.length - update.startState.doc.length // if negative, text was deleted and we ignore
 
 				// TODO: I don't like that we're using obsidian's API here. 
-				if (view) { // If the view is the editor, which it always? will be, so this feels redundant
-					let cursor = view.editor.getCursor(); // get the cursor
-					const line = cursor.line
-					let line_contents = view.editor.getLine(line);
-					
-					// If the line should be wrapped
-					if (cursor.ch == this.settings.textWidth && view.editor.getLine(line).length <= this.settings.textWidth && diff >= 1) {
-						// Determine where to insert newline
-						let insert_location: EditorPosition;
-						if (this.settings.wrapMode == 1) {
-							// wrap word
-							const index = line_contents.lastIndexOf(' ')+1; // get the last space
-							if (index != -1) {
-								view.editor.setCursor(line, index); // move to space
-								cursor = view.editor.getCursor(); // update variable
-							}
-						}
-
-						console.log("AutoTextWrap: wrapping line");
-						view.editor.setCursor(line, 0); // move the cursor back a bit to avoid interfering with insertion
-						view.editor.replaceRange('\n', cursor); // add a new line at the old cursor
-
-						// return cursor to the end of the new line
-						line_contents = view.editor.getLine(line + 1);
-						view.editor.setCursor(line + 1, line_contents.length);
+				let cursor = view.editor.getCursor(); // get the cursor
+				const line = cursor.line
+				let line_contents = view.editor.getLine(line);
+				
+				// If the line should be wrapped
+				if (cursor.ch == this.settings.textWidth && view.editor.getLine(line).length <= this.settings.textWidth && diff >= 1) {
+					if (this.settings.wrapMode == 1) {
+						// wrap word
+						const index = line_contents.lastIndexOf(' ')+1; // get the last space
+						cursor.ch = (index != -1) ? index : cursor.ch; 
 					}
+										
+					console.log("AutoTextWrap: wrapping line");
+					view.editor.setCursor(line, 0); // move the cursor back a bit to avoid interfering with insertion
+					view.editor.replaceRange('\n', cursor); // add a new line at the old cursor
+					// return cursor to the end of the new line
+					line_contents = view.editor.getLine(line + 1);
+					view.editor.setCursor(line + 1, line_contents.length);	
 				}
 			}
 		});
